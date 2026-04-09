@@ -1,0 +1,28 @@
+{
+  "StartAt": "ValidateInput",
+  "States": {
+    "ValidateInput": {
+      "Type": "Task",
+      "Resource": "VALIDATE_LAMBDA_ARN",
+      "Next": "ProcessJob"
+    },
+    "ProcessJob": {
+      "Type": "Task",
+      "Resource": "PROCESS_LAMBDA_ARN",
+      "Retry": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 3,
+          "BackoffRate": 2
+        }
+      ],
+      "Next": "StoreOutput"
+    },
+    "StoreOutput": {
+      "Type": "Task",
+      "Resource": "STORE_LAMBDA_ARN",
+      "End": true
+    }
+  }
+}
